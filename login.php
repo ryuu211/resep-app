@@ -15,6 +15,7 @@ if(isset($_POST['login'])){
         $data = mysqli_fetch_assoc($query);
         $_SESSION['username'] = $data['username'];
         $_SESSION['nama_admin'] = $data['nama_admin'];
+        $_SESSION['role'] = $data['role'];
         header("Location: index.php");
     } else {
         $error = "Username atau password salah!";

@@ -50,8 +50,13 @@ if(isset($_POST['simpan'])){
 <div class="navbar">
     🍳 Resep Makanan
     <a href="index.php">Beranda</a>
+
+    <?php if(isset($_SESSION['username'])): ?>
     <a href="tambah.php">Tambah Resep</a>
+    <a href="kelola-admin.php">Kelola Admin</a>
     <a href="logout.php" class="logout">Logout</a>
+    <?php endif; ?>
+
 </div>
 
 <div class="container">
