@@ -12,11 +12,16 @@ if(isset($_POST['tambah'])){
     $password = MD5($_POST['password']);
     $nama_admin = $_POST['nama_admin'];
 
-    mysqli_query($conn,
-        "INSERT INTO admin (username, password, nama_admin)
-        VALUES ('$username','$password','$nama_admin')"
-    );
-    header("Location: kelola-admin.php");
+    $cek = mysqli_query($conn, "SELECT * FROM admin WHERE username='$username'");
+    if(mysqli_num_rows($cek) > 0){
+        $error_tambah = "Username sudah dipakai!";
+    } else {
+        mysqli_query($conn,
+            "INSERT INTO admin (username, password, nama_admin)
+            VALUES ('$username','$password','$nama_admin')"
+        );
+        header("Location: kelola-admin.php");
+    }
 }
 
 // Hapus admin
@@ -64,6 +69,7 @@ $admins = mysqli_query($conn, "SELECT * FROM admin");
             <label>Password</label><br>
             <input type="password" name="password" required>
             <br><br>
+            <?php if(isset($error_tambah)) echo "<p style='color:red'>$error_tambah</p>"; ?>
             <button type="submit" name="tambah">Tambah</button>
         </form>
     </div>
