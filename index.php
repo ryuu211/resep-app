@@ -27,9 +27,21 @@ include 'koneksi.php';
 
     <h1>🍳Resep Makanan</h1>
 
-<form method="GET">
-    <input type="text" name="search" class="search-input" placeholder="Cari resep..." value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
-    <button type="submit">Cari</button>
+<form method="GET" style="display:flex; gap:0;">
+    <div class="search-wrapper">
+        <input type="text" name="search" class="search-input" placeholder="Cari resep..." value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>">
+        <button type="submit" class="search-btn">🔍</button>
+    </div>
+    <select name="kategori" onchange="this.form.submit()">
+        <option value="">Semua</option>
+        <?php
+        $kat = mysqli_query($conn, "SELECT * FROM kategori");
+        while($k = mysqli_fetch_assoc($kat)){
+            $selected = (isset($_GET['kategori']) && $_GET['kategori'] == $k['id_kategori']) ? 'selected' : '';
+            echo "<option value='".$k['id_kategori']."' $selected>".$k['nama_kategori']."</option>";
+        }
+        ?>
+    </select>
 </form>
 
     <br><br>
@@ -37,10 +49,17 @@ include 'koneksi.php';
     <?php
 
     $search = isset($_GET['search']) ? $_GET['search'] : '';
+    $kategori = isset($_GET['kategori']) ? $_GET['kategori'] : '';
+
+    $where = "WHERE resep.nama_resep LIKE '%$search%'";
+    if(!empty($kategori)){
+        $where .= " AND resep.id_kategori='$kategori'";
+    }
+
     $query = mysqli_query($conn, "SELECT resep.*, kategori.nama_kategori 
     FROM resep 
     LEFT JOIN kategori ON resep.id_kategori = kategori.id_kategori 
-    WHERE resep.nama_resep LIKE '%$search%'");
+    $where");
 
     while($data = mysqli_fetch_assoc($query)) {
 
